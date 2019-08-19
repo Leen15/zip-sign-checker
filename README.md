@@ -1,0 +1,3 @@
+# Zip sign validator
+
+WIP
