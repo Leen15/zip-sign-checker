@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Sign Zip NF525 Checker</title>
+
+<!-- Bootstrap core CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<!-- <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
+
+<!-- Custom styles for this template -->
+<link href="css/scrolling-nav.css" rel="stylesheet">
+
+<link href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+<link href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.dataTables.min.css">
+
+<style>
+  .goback {
+    background: white;
+    border: none;
+    text-decoration: underline;
+  }
+</style>
+</head>
+
+<body id="page-top">
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand js-scroll-trigger" href="#page-top">Sign Zip NF525 Checker</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <!--li class="nav-item">
+          <a class="nav-link js-scroll-trigger" href="#about">About</a>
+        </li-->
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header class="bg-primary text-white">
+  <div class="container text-center">
+    <h1>Welcome to Sign Zip NF525 Checker</h1>
+    <p class="lead">This tool allows to check if a NF525 zip file is signed correctly</p>
+  </div>
+</header>
+
+<section id="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 mx-auto" id="Step1">
+        <h2>Validate your ZIP File</h2>
+        <p class="lead">Select your zip file to check.</p>
+        <input type="file" id="zipFile" />
+        <br/>
+        <br/>
+        <p class="lead">Paste your Public Key.</p>
+        <textarea id="pubKey" rows="8" cols="80"></textarea>
+        <br/>
+        <br/>
+        <button onClick="checkZipFile()" style="border: 1px solid;
+        padding: 5px 10px;">Check Archive Integrity</button>
+      </div>
+        
+      <div class="col-lg-12 mx-auto" id="Step2" style="display: none;">
+        <button class="goback" onClick="goBack(1)">Go back to upload</button>
+        <h2>Select File to view</h2>
+        <ul id="FileList">
+        </ul>          
+      </div>
+      
+      
+      <div class="col-lg-12 mx-auto" id="Step3" style="display: none;">
+        <button class="goback" onClick="goBack(2)">Go back to file list</button>
+        <h2 id="FileName"></h2>
+        <table class="table" id="FileTable"></table>          
+      </div>
+    </div>
+  </div>
+</section>
+  
+  
+  
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Uala srl 2019</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+  
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Plugin JavaScript -->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  
+  <!-- Custom JavaScript for this theme -->
+  <script src="js/scrolling-nav.js"></script>
+  <script src="https://d3js.org/d3.v3.min.js"></script> 
+  <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
+  
+  <script>
+
+    const pubKeyArea = document.querySelector('#pubKey') ;
+    pubKeyArea.value = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtP0iPKDvbfOKlZgA/xO8
+jvSo31S/owtfG5uyltUMUg0yxb13KfJwMJ9tB3LjfZwRpxCuj7FIOfyCdPWY85tC
+T1GHMTph1xG3fx9MsMQCN0H8eIgnCiLcfo3SpqxacBS1wVILAU9gyVm7l+mq7bn8
+/Ui2Gq6B+oUGLiQ5I3s5R2CPM2SCtbswIgYMJXDRw0fYY+uIBdX5Q3DBlr07f0bc
+arky92gPxhcNTZyG3GvTWWIgaY+Z+7C5mCRPwrgVNPVUZEjWLZRHxr33R1I6fD12
+0fJBj+cpej7llHM6gW0Tz/eD6TQovFucY3z/WNmmVLuKRZbfT8v8tjpKkx2ujSks
+IwIDAQAB 
+-----END PUBLIC KEY-----`;;
+
+    function checkZipFile() {
+      //const fileInput = document.getElementById('zipFile');
+      const fileInput = document.querySelector('#zipFile') ;
+      const pubKey = document.querySelector('#pubKey');
+      const formData = new FormData();
+      
+      console.log(fileInput.files[0]);
+      formData.append('zipFile', fileInput.files[0]);
+      formData.append('pubKey', pubKey.value);
+      
+      const options = {
+        method: 'POST',
+        body: formData,
+      };
+      
+      fetch('/checkZip', options)
+      .then((response) => response.json())
+      .then((result) => {
+        if (!result.success) {
+          alert(result.message);
+          return;
+        }
+        
+        document.getElementById("Step1").style.display = "none";
+        document.getElementById("Step2").style.display = "block";
+        
+        
+        const ul = document.getElementById("FileList");
+        ul.innerHTML = '';
+        
+        result.internalzipFiles.forEach(file => {
+          var li = document.createElement("li");
+          var a = document.createElement("a");
+          a.textContent = file;
+          a.setAttribute('href', "#");
+          a.onclick = function() { readFile(result.targetDirInternalZip, file); };
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+        
+        
+        console.log('Success:', result);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    }
+    
+    function readFile(path, fileName) {
+      
+      console.log("path:", path)
+      console.log("fileName:", fileName)
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          path: path, 
+          fileName: fileName,
+        }),
+      };
+      
+      fetch('/readInternalFile', options)
+      .then((response) => response.json())
+      .then((result) => {
+        if (!result.success) {
+          alert(result.message);
+          return;
+        }
+        
+        
+        document.getElementById("Step2").style.display = "none";
+        document.getElementById("Step3").style.display = "block";
+        
+        const fileNameH2 = document.getElementById("FileName").textContent = fileName;
+        
+        var parsedCSV = d3.csv.parseRows(result.fileContent);
+        // console.log(parsedCSV)
+        var table = d3.select("#FileTable");
+        
+        if ($.fn.DataTable.isDataTable('#FileTable')) {
+              $('#FileTable').DataTable().destroy();
+              $('#FileTable').html("");
+        }
+        
+        // headers
+        table.append("thead").append("tr")
+        .selectAll("th")
+        .data(parsedCSV[0])
+        .enter().append("th")
+        .text(function(d) { return d; })
+        
+        // data
+        table.append("tbody")
+        .selectAll("tr").data(parsedCSV.slice(1))
+        .enter().append("tr")
+        .selectAll("td")
+        .data(function(d){return d;})
+        .enter().append("td")
+        .text(function(d){return d;});  
+        
+        if (!$('#FileTable').DataTable) {
+          $('#FileTable').DataTable( {
+            responsive: true,
+          } );
+        }
+
+       
+        $('#FileTable').DataTable( {
+          responsive: true,
+        } );
+        
+        console.log(result);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    }
+    
+    function goBack(step) {
+      if (step == 2){
+        document.getElementById("Step3").style.display = "none";
+        document.getElementById("Step2").style.display = "block";
+      }
+      else if (step == 1){
+        document.getElementById("Step2").style.display = "none";
+        document.getElementById("Step1").style.display = "block";
+      }
+    }
+  </script>
+</body>  
+</html>

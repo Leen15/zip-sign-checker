@@ -1,42 +1,35 @@
 {
-    "title": "Scrolling Nav",
-    "name": "startbootstrap-scrolling-nav",
-    "version": "4.2.1",
-    "scripts": {
-        "start": "node_modules/.bin/gulp watch"
-    },
-    "description": "A smooth scrolling navigation HTML template built with Bootstrap",
-    "keywords": [
-        "css",
-        "sass",
-        "html",
-        "responsive",
-        "theme",
-        "template"
-    ],
-    "homepage": "https://startbootstrap.com/template-overviews/scrolling-nav",
-    "bugs": {
-        "url": "https://github.com/BlackrockDigital/startbootstrap-scrolling-nav/issues",
-        "email": "feedback@startbootstrap.com"
-    },
-    "license": "MIT",
-    "author": "Start Bootstrap",
-    "contributors": [
-        "David Miller (http://davidmiller.io/)"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/BlackrockDigital/startbootstrap-scrolling-nav.git"
-    },
-    "dependencies": {
-        "bootstrap": "4.3.1",
-        "jquery": "3.4.1",
-        "jquery.easing": "^1.4.1"
-    },
-    "devDependencies": {
-        "browser-sync": "2.26.7",
-        "del": "^4.1.1",
-        "gulp": "4.0.2",
-        "merge-stream": "2.0.0"
-    }
+  "name": "zip-sign-checker",
+  "version": "1.0.0",
+  "description": "Zip Sign Checker",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node.js",
+    "express"
+  ],
+  "author": "leen15",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/uala/zip-sign-checker.git"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.0",
+    "express-session": "^1.17.1",
+    "extract-zip": "^2.0.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.4",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {}
 }
