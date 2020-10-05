@@ -23,7 +23,7 @@ exports.checkZip = async (req, res) => {
         return res.status(422).send({success: false, message: "File upload failed, try again."});
     }
     if (zipFile.mimetype != 'application/zip') {
-        return res.status(422).send({success: false, message: "File format not valid, it should be a zip file."});
+        return res.status(422).send({success: false, message: "File format not valid, it should be a zip file. (" + zipFile.mimetype + ")"});
     }
 
     console.log(req.files.zipFile.name);
