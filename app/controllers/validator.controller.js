@@ -13,7 +13,7 @@ exports.checkZip = async (req, res) => {
     if (!req.body.pubKey) {
         return res.status(422).send({success: false, message: 'No public key in params.'});
     }
-    
+
     publicKey = req.body.pubKey;
     console.log(publicKey);
 
@@ -64,23 +64,23 @@ exports.checkZip = async (req, res) => {
     // calculate md5 of the zip file
     //const md5zipFile = md5File.sync(targetDir + "/" + internalZipFile)
     const internalZipFileContent = await fs.readFile(targetDir + "/" + internalZipFile);
-    const md5zipFile = createHash('md5').update(internalZipFileContent).digest('hex');
-    console.log("zip md5     :", md5zipFile);
+    const sha256zipFile = createHash('sha256').update(internalZipFileContent).digest('hex');
+    console.log("zip sha256     :", sha256zipFile);
 
 
-    // get md5 file value
-    const internalmd5File = files.filter(el => /\.md5$/.test(el))[0];
-    if (!internalmd5File) {
-      return res.status(422).send({success: false, message: "Cannot find a md5 file inside the archive"});
+    // get sha256 file value
+    const internalsha256File = files.filter(el => /\.sha256$/.test(el))[0];
+    if (!internalsha256File) {
+      return res.status(422).send({success: false, message: "Cannot find a sha256 file inside the archive"});
     }
-    const md5checksum = await fs.readFile(targetDir + "/" + internalmd5File,  "utf8");
-    console.log("md5 checksum:", md5checksum);
+    const sha256checksum = await fs.readFile(targetDir + "/" + internalsha256File,  "utf8");
+    console.log("sha256 checksum:", sha256checksum);
 
-    // check md5 checksum
-    if (md5zipFile != md5checksum) {
-      return res.status(422).send({success: false, message: "md5 validation of the zip file is failed."});
+    // check sha256 checksum
+    if (sha256zipFile != sha256checksum) {
+      return res.status(422).send({success: false, message: "shaa256 validation of the zip file is failed."});
     }
-    
+
     // get signature file value
     const internalsignatureFile = files.filter(el => /\.signature$/.test(el))[0];
     if (!internalsignatureFile) {
@@ -101,7 +101,7 @@ exports.checkZip = async (req, res) => {
     //   // var dec = decipher.update(signature,'hex','utf8')
     //   // dec += decipher.final('utf8');
     //   // console.log(dec);
-      
+
     //   // const verify = crypto.createVerify('SHA256');
     //   // verify.write(md5checksum);
     //   // verify.end();
@@ -113,7 +113,7 @@ exports.checkZip = async (req, res) => {
     } catch (e) {
        console.log(e);
     }
-    
+
 
     // extract internal zip file
     const internalZipFullPath = targetDir + "/" + internalZipFile;
@@ -131,7 +131,7 @@ exports.checkZip = async (req, res) => {
     console.log(internalzipFiles);
 
     const ret = {
-      success: true, 
+      success: true,
       internalzipFiles,
       targetDirInternalZip: targetDirInternalZip.replace("/tmp/zip-sign-checker_", ""),
       message: "validation ok."
